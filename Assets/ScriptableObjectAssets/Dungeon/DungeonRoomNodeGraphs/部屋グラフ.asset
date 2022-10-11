@@ -1,0 +1,70 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-7782935768726374800
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c98b3ffc115066a42bdf365fe4ad92bb, type: 3}
+  m_Name: "\u30CE\u30FC\u30C9"
+  m_EditorClassIdentifier: 
+  id: 48baab34-97fb-46b4-8c1b-649f61efa240
+  parentRoomIDList: []
+  childRoomIDList: []
+  roomNodeGraph: {fileID: 11400000}
+  roomNodeType: {fileID: 11400000, guid: 20b724385dea85a49b5a993227ba71dc, type: 2}
+  roomNodeTypeList: {fileID: 11400000, guid: 796c286129c1af64babfdbf94617860a, type: 2}
+  rect:
+    serializedVersion: 2
+    x: 681
+    y: 196
+    width: 160
+    height: 75
+  isLeftClickDragging: 0
+  isSelected: 1
+--- !u!114 &-3654326101884727991
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c98b3ffc115066a42bdf365fe4ad92bb, type: 3}
+  m_Name: "\u30CE\u30FC\u30C9"
+  m_EditorClassIdentifier: 
+  id: cd47561a-b22d-4dea-bfea-1cacd1f67462
+  parentRoomIDList: []
+  childRoomIDList: []
+  roomNodeGraph: {fileID: 11400000}
+  roomNodeType: {fileID: 11400000, guid: cb24358c8f843594fa0440bd713b9b8a, type: 2}
+  roomNodeTypeList: {fileID: 11400000, guid: 796c286129c1af64babfdbf94617860a, type: 2}
+  rect:
+    serializedVersion: 2
+    x: 732
+    y: 426
+    width: 160
+    height: 75
+  isLeftClickDragging: 0
+  isSelected: 0
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 837deb5cb60239a48a97047f897ef78e, type: 3}
+  m_Name: "\u90E8\u5C4B\u30B0\u30E9\u30D5"
+  m_EditorClassIdentifier: 
+  roomNodeTypeList: {fileID: 0}
+  roomNodelist:
+  - {fileID: -3654326101884727991}
+  - {fileID: -7782935768726374800}
