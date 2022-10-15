@@ -7,6 +7,7 @@ using System.Xml.Serialization;
 public class RoomNoveGraphEditor : EditorWindow
 {
     private GUIStyle roomNodeStyle;
+    private GUIStyle roomNodeSelectedStyle;
     private static RoomNodeGraphSO currentRoomNodeGraph;
     private RoomNodeSO currentRoomNode = null;
     private RoomNodeTypeListSO roomNodeTypeList;
@@ -29,14 +30,27 @@ public class RoomNoveGraphEditor : EditorWindow
 
     private void OnEnable()
     {
+        Selection.selectionChanged += InspectorSelectionChanged;
+        //普通スタイル
         roomNodeStyle = new GUIStyle();
         roomNodeStyle.normal.background = EditorGUIUtility.Load("node1") as Texture2D;
         roomNodeStyle.normal.textColor = Color.white;
         roomNodeStyle.padding = new RectOffset(nodePadding, nodePadding, nodePadding, nodePadding);
         roomNodeStyle.border = new RectOffset(nodeBorder, nodeBorder, nodeBorder, nodeBorder);
+        //選んでいる状態のスタイル
+        roomNodeSelectedStyle = new GUIStyle();
+        roomNodeSelectedStyle.normal.background = EditorGUIUtility.Load("node1 on") as Texture2D;
+        roomNodeSelectedStyle.normal.textColor = Color.white;
+        roomNodeSelectedStyle.padding = new RectOffset(nodePadding, nodePadding, nodePadding, nodePadding);
+        roomNodeSelectedStyle.border = new RectOffset(nodeBorder, nodeBorder, nodeBorder, nodeBorder);
 
         //部屋のタイプをロードする
         roomNodeTypeList = GameResources.Instance.roomNodeTypeList;
+    }
+
+    private void OnDisable()
+    {
+        Selection.selectionChanged -= InspectorSelectionChanged;
     }
 
     /// <summary>
@@ -163,6 +177,13 @@ public class RoomNoveGraphEditor : EditorWindow
         {
             ShowContextMenu(currentEvent.mousePosition);
         }
+
+        if(currentEvent.button == 0)
+        {
+            ClearLineDrag();
+            ClearAllSelectedRoomNodes();
+        }
+
     }
     /// <summary>
     /// マウスボタンを離れるイベントの処理（ノードを除く）
@@ -220,15 +241,10 @@ public class RoomNoveGraphEditor : EditorWindow
         GenericMenu menu = new GenericMenu();
 
         menu.AddItem(new GUIContent("ノード作成"), false, CreateRoomNode, mousePosition);
+        menu.AddSeparator("");
+        menu.AddItem(new GUIContent("全てのノードを選択"), false, SelectAllRoomNodes);
 
         menu.ShowAsContext();
-    }
-    /// <summary>
-    /// マウス位置でノードの作成
-    /// </summary>
-    private void CreateRoomNode(object mousePositionObject)
-    {
-        CreateRoomNode(mousePositionObject, roomNodeTypeList.list.Find(x => x.isNone));
     }
 
     /// <summary>
@@ -238,6 +254,29 @@ public class RoomNoveGraphEditor : EditorWindow
     {
         currentRoomNodeGraph.roomNodeToDrawLineFrom = null;
         currentRoomNodeGraph.linePosition = Vector2.zero;
+        GUI.changed = true;
+    }
+
+    /// <summary>
+    /// ノードの選んだ状態の削除
+    /// </summary>
+    private void ClearAllSelectedRoomNodes()
+    {
+        foreach(RoomNodeSO roomNode in currentRoomNodeGraph.roomNodelist)
+        {
+            if(roomNode.isSelected)
+            {
+                roomNode.isSelected = false;
+                GUI.changed = true;
+            }
+        }
+    }
+    public void SelectAllRoomNodes()
+    {
+        foreach (RoomNodeSO roomNode in currentRoomNodeGraph.roomNodelist)
+        {
+            roomNode.isSelected = true;
+        }
         GUI.changed = true;
     }
 
@@ -283,6 +322,19 @@ public class RoomNoveGraphEditor : EditorWindow
     }
 
     /// <summary>
+    /// マウス位置でノードの作成
+    /// </summary>
+    private void CreateRoomNode(object mousePositionObject)
+    {
+        if(currentRoomNodeGraph.roomNodelist.Count == 0)
+        {
+            CreateRoomNode(new Vector2(200f,200f), roomNodeTypeList.list.Find(x => x.isEntrance));
+        }
+
+        CreateRoomNode(mousePositionObject, roomNodeTypeList.list.Find(x => x.isNone));
+    }
+
+    /// <summary>
     /// マウス位置でノードの作成　ー　RoomNodeTypeSOを使うためにオーバーロード
     /// </summary>
     private void CreateRoomNode(object mousePositionObject, RoomNodeTypeSO roomType)
@@ -312,12 +364,31 @@ public class RoomNoveGraphEditor : EditorWindow
     {
         foreach(RoomNodeSO roomNode in currentRoomNodeGraph.roomNodelist)
         {
-            roomNode.Draw(roomNodeStyle);
+            if (roomNode.isSelected)
+            {
+                roomNode.Draw(roomNodeSelectedStyle);
+            }
+            else
+            {
+                roomNode.Draw(roomNodeStyle);
+            }
         }
+
         GUI.changed = true;
     }
 
+    /// <summary>
+    /// インスペクターで選択したオブジェクトがが変わった
+    /// </summary>
+    private void InspectorSelectionChanged()
+    {
+        RoomNodeGraphSO roomNodeGraph = Selection.activeObject as RoomNodeGraphSO;
 
-
+        if(roomNodeGraph != null)
+        {
+            currentRoomNodeGraph = roomNodeGraph;
+            GUI.changed = true;
+        }
+    }
 
 }
