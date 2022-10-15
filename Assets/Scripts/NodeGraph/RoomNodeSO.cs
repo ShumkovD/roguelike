@@ -100,6 +100,11 @@ public class RoomNodeSO : ScriptableObject
         {
             ProcessLeftClickDownEvent();
         }
+        else if(currentEvent.button == 1)
+        {
+            ProcessRightClickDownEvent(currentEvent);
+        }
+
     }
     private void ProcessLeftClickDownEvent()
     {
@@ -113,6 +118,11 @@ public class RoomNodeSO : ScriptableObject
         {
             isSelected = true;
         }
+    }
+
+    private void ProcessRightClickDownEvent(Event currentEvent)
+    {
+        roomNodeGraph.SetNodeToDrawConnectionLineFrom(this, currentEvent.mousePosition);
     }
 
     private void ProcessMouseUpEvent(Event currentEvent)
@@ -153,6 +163,20 @@ public class RoomNodeSO : ScriptableObject
         rect.position += delta;
         EditorUtility.SetDirty(this);
     }
+    //ノードに子供を追加する
+    public bool AddChildRoomNodeIDToRoomNode(string childID)
+    {
+        childRoomIDList.Add(childID);
+        return true;
+    }
+
+    //ノードに親を追加する
+    public bool AddParentRoomNodeIDToRoomNode(string parentID)
+    {
+        parentRoomIDList.Add(parentID);
+        return true;
+    }
+
 
 #endif
 
