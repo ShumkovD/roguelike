@@ -57,6 +57,26 @@ public class RoomNodeSO : ScriptableObject
             int selection = EditorGUILayout.Popup("", selected, GetRoomNodeTypesToDisplay());
 
             roomNodeType = roomNodeTypeList.list[selection];
+
+            if (roomNodeTypeList.list[selected].isCorridor && !roomNodeTypeList.list[selection].isCorridor || 
+                !roomNodeTypeList.list[selected].isCorridor && roomNodeTypeList.list[selection].isCorridor || 
+                !roomNodeTypeList.list[selected].isBossRoom && roomNodeTypeList.list[selection].isBossRoom)
+            {
+                if (childRoomIDList.Count > 0)
+                {
+                    for (int i = childRoomIDList.Count - 1; i >= 0; i--)
+                    {
+                        RoomNodeSO childRoomNode = roomNodeGraph.GetRoomNode(childRoomIDList[i]);
+
+                        if (childRoomNode != null)
+                        {
+                            RemoveChildRoomNodeIDFromRoomNode(childRoomNode.id);
+                            childRoomNode.RemoveParentRoomNodeIDFromRoomNode(id);
+                        }
+                    }
+                }
+
+            }
         }
 
         if (EditorGUI.EndChangeCheck())
@@ -236,6 +256,28 @@ public class RoomNodeSO : ScriptableObject
             return false;
 
         return true;
+    }
+
+
+
+    public bool RemoveChildRoomNodeIDFromRoomNode(string childID)
+    {
+        if(childRoomIDList.Contains(childID))
+        {
+            childRoomIDList.Remove(childID);
+            return true;
+        }
+        return false;
+    }
+
+    public bool RemoveParentRoomNodeIDFromRoomNode(string parentID)
+    {
+        if (parentRoomIDList.Contains(parentID))
+        {
+            parentRoomIDList.Remove(parentID);
+            return true;
+        }
+        return false;
     }
 
 #endif
